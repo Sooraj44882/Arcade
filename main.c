@@ -34,8 +34,16 @@ int main(void)
             ballSpeed.x *= -1;
         }
 
-        if (ballPos.y - ballRadius <= 0 || ballPos.y + ballRadius >= 600){
+        if (ballPos.y - ballRadius <= 0 ){
             ballSpeed.y *= -1;
+        }
+        if (ballPos.y + ballRadius >= 600){
+            ballSpeed.y=0;
+        }
+
+        if (CheckCollisionCircleRec(ballPos, ballRadius, paddle))        {
+            ballSpeed.y *= -1;
+            ballPos.y = paddle.y - ballRadius;
         }
 
         BeginDrawing();
