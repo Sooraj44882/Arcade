@@ -18,6 +18,8 @@ int main(void)
     Rectangle bricks[5][10];
     int active[5][10];
 
+    int score = 0;
+
     int startX = 40; 
     int startY = 50;
 
@@ -25,6 +27,7 @@ int main(void)
 
     while (!WindowShouldClose())
     {
+        
         switch (currentScreen) {
             case START:
             {
@@ -33,6 +36,7 @@ int main(void)
                     ballPos = (Vector2){400, 300};
                     ballSpeed = (Vector2){5.0f, -5.0f};
                     paddle.x = 350;
+                    score = 0;
 
                     for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 10; j++) {
@@ -62,10 +66,9 @@ int main(void)
                 ballPos.x += ballSpeed.x;
                 ballPos.y += ballSpeed.y;
 
-                if (ballPos.x - ballRadius <= 0 || ballPos.x + ballRadius >= 800){
-                    ballSpeed.x *= -1;
-                }
+                if (ballPos.x - ballRadius <= 0 || ballPos.x + ballRadius >= 800) ballSpeed.x *= -1;
                 if (ballPos.y - ballRadius <= 0 ) ballSpeed.y *= -1;
+                
                 if (ballPos.y + ballRadius >= 600) {
                     currentScreen = GAMEOVER; 
                 }
@@ -81,6 +84,8 @@ int main(void)
                             if (CheckCollisionCircleRec(ballPos, ballRadius, bricks[i][j])) {
                                 active[i][j] = 0;
                                 ballSpeed.y *= -1;
+                                
+                                score += 100;
                             }
                         }
                     }
@@ -96,6 +101,7 @@ int main(void)
                     ballPos = (Vector2){400, 300};
                     ballSpeed = (Vector2){5.0f, -5.0f};
                     paddle.x = 350;
+                    score = 0; 
 
                     for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 10; j++) {
@@ -131,13 +137,16 @@ int main(void)
                         }
                     }
                 }
+                
+                DrawText(TextFormat("SCORE: %i", score), 20, 20, 20, BLACK);
             } break;
 
             case GAMEOVER:
             {
                 DrawText("GAME OVER", 250, 200, 50, RED);
-                DrawText("PRESS R TO Retry", 180, 300, 50, BLACK);
-                DrawText("PRESS ENTER TO RETURN TO Menu", 220, 400, 20, DARKGRAY);
+                DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
+                DrawText("PRESS R TO Retry", 290, 320, 20, DARKGRAY);
+                DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
             } break;
         }
 
