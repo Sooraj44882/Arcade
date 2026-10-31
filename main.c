@@ -19,6 +19,7 @@ int main(void)
     int active[5][10];
 
     int score = 0;
+    Color rowColors[5] = { RED, ORANGE, YELLOW, GREEN, BLUE };
 
     int startX = 40; 
     int startY = 50;
@@ -121,7 +122,7 @@ int main(void)
         {
             case START:
             {
-                DrawText("Brick Break", 250, 200, 50, BLACK);
+                DrawText("Brick Break", 220, 200, 50, BLACK);
                 DrawText("PRESS ENTER TO START", 250, 300, 20, DARKGRAY);
             } break;
 
@@ -133,7 +134,7 @@ int main(void)
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 10; j++) {
                         if (active[i][j] == 1) {
-                            DrawRectangleRec(bricks[i][j], DARKGRAY);
+                            DrawRectangleRec(bricks[i][j], rowColors[i]);
                         }
                     }
                 }
