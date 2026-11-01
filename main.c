@@ -12,6 +12,9 @@ int main(void)
     int speedX = cellSize;
     int speedY = 0;
 
+    int foodX = 200;
+    int foodY = 200;
+
     SetTargetFPS(10); 
 
     while (!WindowShouldClose())
@@ -36,8 +39,16 @@ int main(void)
         snakeX += speedX;
         snakeY += speedY;
 
+        if (snakeX == foodX && snakeY == foodY)
+        {
+            foodX = GetRandomValue(0, (800 / cellSize) - 1) * cellSize;
+            foodY = GetRandomValue(0, (600 / cellSize) - 1) * cellSize;
+        }
+
         BeginDrawing();
         ClearBackground(RAYWHITE);
+
+        DrawRectangle(foodX, foodY, cellSize, cellSize, RED);
 
         DrawRectangle(snakeX, snakeY, cellSize, cellSize, DARKGREEN);
 
