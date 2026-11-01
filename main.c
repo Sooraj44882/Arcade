@@ -1,6 +1,6 @@
 #include "raylib.h"
 
-typedef enum GameScreen { START, PLAY, GAMEOVER } GameScreen;
+typedef enum GameScreen { START, PLAY, GAMEOVER, WIN } GameScreen;
 
 int main(void)
 {
@@ -28,7 +28,6 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        
         switch (currentScreen) {
             case START:
             {
@@ -55,15 +54,11 @@ int main(void)
             case PLAY:
             {
                 if (IsKeyDown(KEY_LEFT)) paddle.x -= paddleSpeed;
-                
                 if (IsKeyDown(KEY_RIGHT)) paddle.x += paddleSpeed;
 
-                if (paddle.x <= 0){
-                    paddle.x = 0;
-                }
-                if (paddle.x + paddle.width >= 800){
-                    paddle.x = 800 - paddle.width;
-                }
+                if (paddle.x <= 0) paddle.x = 0;
+                if (paddle.x + paddle.width >= 800) paddle.x = 800 - paddle.width;
+                
                 ballPos.x += ballSpeed.x;
                 ballPos.y += ballSpeed.y;
 
@@ -79,25 +74,32 @@ int main(void)
                     ballPos.y = paddle.y - ballRadius;
                 }
 
+                int activeCount = 0;
+
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 10; j++) {
                         if (active[i][j] == 1) {
+                            activeCount++; 
+                            
                             if (CheckCollisionCircleRec(ballPos, ballRadius, bricks[i][j])) {
                                 active[i][j] = 0;
                                 ballSpeed.y *= -1;
-                                
                                 score += 100;
+                                activeCount--; 
                             }
                         }
                     }
                 }
+
+                if (activeCount <= 0) {
+                    currentScreen = WIN;
+                }
             } break;
 
             case GAMEOVER:
+            case WIN:
             {
-                if (IsKeyPressed(KEY_ENTER)) {
-                    currentScreen = START;
-                }
+                if (IsKeyPressed(KEY_ENTER)) currentScreen = START;
                 if (IsKeyPressed(KEY_R)) {
                     ballPos = (Vector2){400, 300};
                     ballSpeed = (Vector2){5.0f, -5.0f};
@@ -109,7 +111,6 @@ int main(void)
                             active[i][j] = 1;
                         }
                     }
-
                     currentScreen = PLAY;
                 }
             } break;
@@ -147,6 +148,14 @@ int main(void)
                 DrawText("GAME OVER", 250, 200, 50, RED);
                 DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
                 DrawText("PRESS R TO Retry", 290, 320, 20, DARKGRAY);
+                DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
+            } break;
+
+            case WIN:
+            {
+                DrawText("YOU WIN", 280, 200, 50, GREEN);
+                DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
+                DrawText("PRESS R TO Play Again", 270, 320, 20, DARKGRAY);
                 DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
             } break;
         }
