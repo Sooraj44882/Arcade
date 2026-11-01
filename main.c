@@ -19,6 +19,8 @@ int main(void)
     int active[5][10];
 
     int score = 0;
+    int totalBricks = 50; 
+    
     Color rowColors[5] = { RED, ORANGE, YELLOW, GREEN, BLUE };
 
     int startX = 40; 
@@ -37,6 +39,7 @@ int main(void)
                     ballSpeed = (Vector2){5.0f, -5.0f};
                     paddle.x = 350;
                     score = 0;
+                    totalBricks = 50; 
 
                     for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 10; j++) {
@@ -74,43 +77,43 @@ int main(void)
                     ballPos.y = paddle.y - ballRadius;
                 }
 
-                int activeCount = 0;
-
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 10; j++) {
                         if (active[i][j] == 1) {
-                            activeCount++; 
-                            
                             if (CheckCollisionCircleRec(ballPos, ballRadius, bricks[i][j])) {
                                 active[i][j] = 0;
                                 ballSpeed.y *= -1;
                                 score += 100;
-                                activeCount--; 
+                                
+                                totalBricks--;
+                                if (totalBricks <= 0) {
+                                    currentScreen = WIN;
+                                }
                             }
                         }
                     }
-                }
-
-                if (activeCount <= 0) {
-                    currentScreen = WIN;
                 }
             } break;
 
             case GAMEOVER:
             case WIN:
             {
-                if (IsKeyPressed(KEY_ENTER)) currentScreen = START;
+                if (IsKeyPressed(KEY_ENTER)) {
+                    currentScreen = START;
+                }
                 if (IsKeyPressed(KEY_R)) {
                     ballPos = (Vector2){400, 300};
                     ballSpeed = (Vector2){5.0f, -5.0f};
                     paddle.x = 350;
                     score = 0; 
+                    totalBricks = 50; 
 
                     for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 10; j++) {
                             active[i][j] = 1;
                         }
                     }
+
                     currentScreen = PLAY;
                 }
             } break;
@@ -150,12 +153,12 @@ int main(void)
                 DrawText("PRESS R TO Retry", 290, 320, 20, DARKGRAY);
                 DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
             } break;
-
+            
             case WIN:
             {
                 DrawText("YOU WIN", 280, 200, 50, GREEN);
                 DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
-                DrawText("PRESS R TO Play Again", 270, 320, 20, DARKGRAY);
+                DrawText("PRESS R TO PLAY AGAIN", 270, 320, 20, DARKGRAY);
                 DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
             } break;
         }
