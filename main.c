@@ -9,6 +9,11 @@ typedef enum GameScreen
 int main(void)
 {
     InitWindow(800, 600, "Snake Game");
+
+    InitAudioDevice();
+    Sound eatSound = LoadSound("eat.wav");
+    Sound crashSound = LoadSound("crash.wav");
+
     GameScreen currentScreen = START;
 
     int cellSize = 20;
@@ -84,6 +89,7 @@ int main(void)
 
             if (snakeX[0] < 0 || snakeX[0] >= 800 || snakeY[0] < 0 || snakeY[0] >= 600)
             {
+                PlaySound(crashSound);
                 currentScreen = GAMEOVER;
             }
 
@@ -91,12 +97,14 @@ int main(void)
             {
                 if (snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i])
                 {
+                    PlaySound(crashSound);
                     currentScreen = GAMEOVER;
                 }
             }
 
             if (snakeX[0] == foodX && snakeY[0] == foodY)
             {
+                PlaySound(eatSound);
                 snakeLength++;
                 score += 10;
 
@@ -160,6 +168,10 @@ int main(void)
 
         EndDrawing();
     }
+
+    UnloadSound(eatSound);
+    UnloadSound(crashSound);
+    CloseAudioDevice();
 
     CloseWindow();
     return 0;
