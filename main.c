@@ -5,6 +5,9 @@ typedef enum GameScreen { START, PLAY, GAMEOVER, WIN } GameScreen;
 int main(void)
 {
     InitWindow(800, 600, "Arcade");
+    
+    InitAudioDevice(); 
+    Sound bounceSound = LoadSound("bounce.wav");
 
     GameScreen currentScreen = START;
 
@@ -65,8 +68,14 @@ int main(void)
                 ballPos.x += ballSpeed.x;
                 ballPos.y += ballSpeed.y;
 
-                if (ballPos.x - ballRadius <= 0 || ballPos.x + ballRadius >= 800) ballSpeed.x *= -1;
-                if (ballPos.y - ballRadius <= 0 ) ballSpeed.y *= -1;
+                if (ballPos.x - ballRadius <= 0 || ballPos.x + ballRadius >= 800) {
+                    ballSpeed.x *= -1;
+                    PlaySound(bounceSound); 
+                }
+                if (ballPos.y - ballRadius <= 0 ) {
+                    ballSpeed.y *= -1;
+                    PlaySound(bounceSound);
+                }
                 
                 if (ballPos.y + ballRadius >= 600) {
                     currentScreen = GAMEOVER; 
@@ -75,6 +84,7 @@ int main(void)
                 if (CheckCollisionCircleRec(ballPos, ballRadius, paddle)) {
                     ballSpeed.y *= -1;
                     ballPos.y = paddle.y - ballRadius;
+                    PlaySound(bounceSound);
                 }
 
                 for (int i = 0; i < 5; i++) {
@@ -86,6 +96,9 @@ int main(void)
                                 score += 100;
                                 
                                 totalBricks--;
+                                
+                                PlaySound(bounceSound);
+
                                 if (totalBricks <= 0) {
                                     currentScreen = WIN;
                                 }
@@ -166,6 +179,9 @@ int main(void)
         EndDrawing();
     }
 
+    UnloadSound(bounceSound); 
+    CloseAudioDevice();       
+    
     CloseWindow();
     return 0;
 }
