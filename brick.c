@@ -1,15 +1,12 @@
 #include "raylib.h"
 
-typedef enum GameScreen { START, PLAY, GAMEOVER, WIN } GameScreen;
+typedef enum BreakoutScreen { B_START, B_PLAY, B_GAMEOVER, B_WIN } BrickScreen;
 
-int main(void)
+void PlayBrick(void)
 {
-    InitWindow(800, 600, "Arcade");
-    
-    InitAudioDevice(); 
     Sound bounceSound = LoadSound("bounce.wav");
 
-    GameScreen currentScreen = START;
+    BrickScreen currentScreen = B_START;
 
     Rectangle paddle = {350, 550, 100, 20};
     int paddleSpeed = 8;
@@ -31,10 +28,10 @@ int main(void)
 
     SetTargetFPS(60);
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE))
     {
         switch (currentScreen) {
-            case START:
+            case B_START:
             {
                 if (IsKeyPressed(KEY_ENTER)) 
                 {
@@ -53,11 +50,11 @@ int main(void)
                             active[i][j] = 1;
                         }
                     }
-                    currentScreen = PLAY;
+                    currentScreen = B_PLAY;
                 }
             } break;
 
-            case PLAY:
+            case B_PLAY:
             {
                 if (IsKeyDown(KEY_LEFT)) paddle.x -= paddleSpeed;
                 if (IsKeyDown(KEY_RIGHT)) paddle.x += paddleSpeed;
@@ -78,7 +75,7 @@ int main(void)
                 }
                 
                 if (ballPos.y + ballRadius >= 600) {
-                    currentScreen = GAMEOVER; 
+                    currentScreen = B_GAMEOVER; 
                 }
 
                 if (CheckCollisionCircleRec(ballPos, ballRadius, paddle)) {
@@ -100,7 +97,7 @@ int main(void)
                                 PlaySound(bounceSound);
 
                                 if (totalBricks <= 0) {
-                                    currentScreen = WIN;
+                                    currentScreen = B_WIN;
                                 }
                             }
                         }
@@ -108,11 +105,11 @@ int main(void)
                 }
             } break;
 
-            case GAMEOVER:
-            case WIN:
+            case B_GAMEOVER:
+            case B_WIN:
             {
                 if (IsKeyPressed(KEY_ENTER)) {
-                    currentScreen = START;
+                    currentScreen = B_START;
                 }
                 if (IsKeyPressed(KEY_R)) {
                     ballPos = (Vector2){400, 300};
@@ -127,7 +124,7 @@ int main(void)
                         }
                     }
 
-                    currentScreen = PLAY;
+                    currentScreen = B_PLAY;
                 }
             } break;
         }
@@ -137,13 +134,13 @@ int main(void)
 
         switch (currentScreen) 
         {
-            case START:
+            case B_START:
             {
                 DrawText("Brick Break", 220, 200, 50, BLACK);
                 DrawText("PRESS ENTER TO START", 250, 300, 20, DARKGRAY);
             } break;
 
-            case PLAY:
+            case B_PLAY:
             {
                 DrawRectangleRec(paddle, BLACK);
                 DrawCircleV(ballPos, ballRadius, RED);
@@ -159,7 +156,7 @@ int main(void)
                 DrawText(TextFormat("SCORE: %i", score), 20, 20, 20, BLACK);
             } break;
 
-            case GAMEOVER:
+            case B_GAMEOVER:
             {
                 DrawText("GAME OVER", 250, 200, 50, RED);
                 DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
@@ -167,7 +164,7 @@ int main(void)
                 DrawText("PRESS ENTER TO RETURN TO Menu", 220, 360, 20, DARKGRAY);
             } break;
             
-            case WIN:
+            case B_WIN:
             {
                 DrawText("YOU WIN", 280, 200, 50, GREEN);
                 DrawText(TextFormat("FINAL SCORE: %i", score), 260, 260, 30, BLACK);
@@ -180,8 +177,5 @@ int main(void)
     }
 
     UnloadSound(bounceSound); 
-    CloseAudioDevice();       
-    
-    CloseWindow();
-    return 0;
 }
+//hbhbhcb 
