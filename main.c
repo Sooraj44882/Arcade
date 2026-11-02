@@ -2,6 +2,7 @@
 
 #include "brick.c"
 #include "snake.c"
+#include "flappy.c"
 
 int main(void)
 {
@@ -17,9 +18,10 @@ int main(void)
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        DrawText("ARCADE Menu", 200, 150, 40, DARKBLUE);
-        DrawText("Press 1 to play BREAKOUT", 250, 280, 20, DARKGRAY);
-        DrawText("Press 2 to play SNAKE", 250, 330, 20, DARKGRAY);
+        DrawText("ARCADE Menu", 200, 100, 40, DARKBLUE);
+        DrawText("Press 1 to play BREAKOUT", 250, 240, 20, DARKGRAY);
+        DrawText("Press 2 to play SNAKE", 250, 290, 20, DARKGRAY);
+        DrawText("Press 3 to play FLAPPY BIRD", 250, 340, 20, DARKGRAY);
         DrawText("Close the window to quit", 250, 450, 20, LIGHTGRAY);
 
         EndDrawing();
@@ -32,6 +34,11 @@ int main(void)
         if (IsKeyPressed(KEY_TWO))
         {
             PlaySnake();    
+            SetTargetFPS(60);
+        }
+        if (IsKeyPressed(KEY_THREE))
+        {
+            PlayFlappy();    
             SetTargetFPS(60);
         }
     }
