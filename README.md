@@ -2,11 +2,18 @@
 
 This is a 2-in-1 arcade hub I built using C. You can launch the app and choose between two different games right from the main menu.
 
+![alt text](<Screenshot 2026-11-02 090539.png>)
+
 ##  Games Included
+
+![alt text](<Screenshot 2026-11-02 090603.png>)
 
 1. **Brick Break** 
    A classic breakout clone. You bounce a ball with a paddle to smash through 50 blocks. I added wall collisions, paddle physics and sound effects.
 2. **Snake** 
+
+![alt text](<Screenshot 2026-11-02 090630.png>)
+
    The standard grid survival game. Steer the snake to eat the apples and grow, but don't hit the walls or bite your own tail.
 
 ## Features
